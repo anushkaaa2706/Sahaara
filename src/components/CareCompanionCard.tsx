@@ -201,9 +201,8 @@ export function CareCompanionCard() {
     setMood('');
   }
 
-  const todayKey = getDayKey(new Date());
-  const todayEntries = history.filter((entry) => entry.date === todayKey);
-
+  
+  
   const lastSevenDays = Array.from({ length: 7 }, (_, index) => {
     const date = new Date();
     date.setDate(date.getDate() - (6 - index));

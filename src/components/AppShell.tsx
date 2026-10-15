@@ -8,8 +8,7 @@ import {
   Users,
   Menu,
   X,
-  User,
-  FlaskConical,
+   User,
 } from 'lucide-react';
 import { DEMO_USER } from '../data/demoData';
 

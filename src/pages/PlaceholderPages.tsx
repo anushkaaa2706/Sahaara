@@ -4,10 +4,8 @@ import {
   Heart,
   Pill,
   Calendar,
-  Users,
   ArrowLeft,
 } from 'lucide-react';
-
 interface PlaceholderProps {
   title: string;
   description: string;

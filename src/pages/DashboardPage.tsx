@@ -16,7 +16,6 @@ interface DashboardResponse {
 
 export function DashboardPage() {
   const [firstName, setFirstName] = useState(DEMO_USER.firstName);
-  const [apiConnected, setApiConnected] = useState(false);
 
   const hour = new Date().getHours();
   const greeting =
@@ -42,13 +41,10 @@ export function DashboardPage() {
         }
 
         setFirstName(data.patient.firstName);
-        setApiConnected(true);
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
           return;
         }
-
-        setApiConnected(false);
       }
     }
 
@@ -59,22 +55,21 @@ export function DashboardPage() {
 
   return (
     <>
-      
-<div className="dashboard-greeting">
-  <h1>
-    {greeting}, {firstName}
-  </h1>
-  <p>Here's your care overview for today.</p>
-  <p className="dashboard-greeting-note">
-    Your personal care dashboard
-  </p>
-</div>
-
+      <div className="dashboard-greeting">
+        <h1>
+          {greeting}, {firstName}
+        </h1>
+        <p>Here's your care overview for today.</p>
+        <p className="dashboard-greeting-note">
+          Your personal care dashboard
+        </p>
+      </div>
 
       <div className="dashboard-grid">
         <div className="card-full-width">
-  <CareCompanionCard />
-</div>
+          <CareCompanionCard />
+        </div>
+
         <QuickHelpCard />
         <DailyCheckInCard />
 
