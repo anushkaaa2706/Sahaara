@@ -3,22 +3,22 @@ import {
   HandHelping,
   Phone,
   Info,
+  ShieldAlert,
+  Users,
+  X,
+  CheckCircle2,
 } from 'lucide-react';
 
-/**
- * Quick Help card — prominent "I need help" button, secondary call action,
- * and a note about emergency services. No false claims of dispatch.
- */
 export function QuickHelpCard() {
   const [showModal, setShowModal] = useState(false);
-  const [callConfirmed, setCallConfirmed] = useState(false);
+  const [feedback, setFeedback] = useState('');
 
-  const handleNeedHelp = () => setShowModal(true);
-
-  const handleCallContact = () => {
-    setCallConfirmed(true);
-    setTimeout(() => setCallConfirmed(false), 4000);
-  };
+  function handleDemoRequest() {
+    setShowModal(false);
+    setFeedback(
+      'Demo only: your request has not been sent to a caregiver.'
+    );
+  }
 
   return (
     <>
@@ -27,72 +27,135 @@ export function QuickHelpCard() {
           <div className="card-header-icon red">
             <HandHelping />
           </div>
-          <h2>Quick Help</h2>
+          <div>
+            <h2>Emergency & Quick Help</h2>
+            <p className="care-subtitle">
+              Support when you need it
+            </p>
+          </div>
         </div>
 
-        <div className="quick-help-actions">
-          <button
-            className="btn btn-danger btn-lg btn-block"
-            onClick={handleNeedHelp}
-            id="btn-need-help"
-          >
-            <HandHelping />
-            I need help
-          </button>
+        <button
+          type="button"
+          className="btn btn-danger btn-lg btn-block"
+          onClick={() => {
+            setFeedback('');
+            setShowModal(true);
+          }}
+        >
+          <HandHelping size={20} />
+          I need help
+        </button>
 
+        <div className="quick-help-secondary-actions">
           <button
+            type="button"
             className="btn btn-outline btn-block"
-            onClick={handleCallContact}
-            id="btn-call-contact"
+            onClick={() =>
+              setFeedback(
+                'Demo only: no phone call was placed. Use your phone to contact your caregiver.'
+              )
+            }
           >
-            <Phone />
-            {callConfirmed ? 'Opening phone for Sarah…' : 'Call my care contact'}
+            <Phone size={18} />
+            Contact my caregiver
           </button>
         </div>
 
-        <div className="quick-help-note" role="note">
-          <Info size={18} />
-          <span>
-            If you are in immediate danger or having a medical emergency,
-            please call <strong>911</strong> (or your local emergency number) directly.
-          </span>
-        </div>
+        {feedback && (
+          <div className="quick-help-feedback" role="status">
+            <Info size={18} />
+            <span>{feedback}</span>
+            <button
+              type="button"
+              onClick={() => setFeedback('')}
+              aria-label="Dismiss message"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+
+       <div className="quick-help-note" role="note">
+  <ShieldAlert size={20} />
+  <span>
+    <strong>Medical emergency?</strong> In India, call 112 for
+    emergency assistance.
+  </span>
+</div>
       </div>
 
-      {/* Help modal */}
       {showModal && (
         <div
           className="modal-overlay"
           onClick={() => setShowModal(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="help-modal-title"
         >
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="modal emergency-help-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="help-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="emergency-help-modal-heading">
+              <div className="card-header-icon red">
+                <HandHelping />
+              </div>
+              <button
+                type="button"
+                className="emergency-help-close"
+                onClick={() => setShowModal(false)}
+                aria-label="Close help panel"
+              >
+                <X />
+              </button>
+            </div>
+
             <h2 id="help-modal-title">How can we help?</h2>
             <p>
-              Your care contact, Sarah Johnson, will be notified that you
-              need assistance. This is a demo — no real message will be sent.
+              Choose the option that best describes what you need.
             </p>
+
+            <div className="emergency-help-options">
+              <div className="emergency-help-option">
+                <ShieldAlert size={22} />
+                <div>
+                  <strong>Immediate emergency</strong>
+                  <p>
+                    If someone is in immediate danger, call 112 directly
+                    from your phone.
+                  </p>
+                </div>
+              </div>
+
+              <div className="emergency-help-option">
+                <Users size={22} />
+                <div>
+                  <strong>Caregiver assistance</strong>
+                  <p>
+                    You can use the demo option below to preview a help
+                    request. It will not contact anyone.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="modal-actions">
               <button
+                type="button"
                 className="btn btn-primary btn-lg btn-block"
-                onClick={() => {
-                  setShowModal(false);
-                  setCallConfirmed(true);
-                  setTimeout(() => setCallConfirmed(false), 4000);
-                }}
-                id="btn-confirm-help"
+                onClick={handleDemoRequest}
               >
-                <Phone />
-                Notify Sarah (demo)
+                <CheckCircle2 size={18} />
+                Preview help request
               </button>
+
               <button
+                type="button"
                 className="btn btn-ghost btn-block"
                 onClick={() => setShowModal(false)}
-                id="btn-cancel-help"
               >
-                Cancel
+                Close
               </button>
             </div>
           </div>

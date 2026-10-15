@@ -53,10 +53,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="header-right">
-          <span className="demo-badge" aria-label="This is demo data">
-            <FlaskConical size={14} />
-            Demo data
-          </span>
+         
           <span className="profile-indicator">
             <User size={18} />
             {DEMO_USER.role}

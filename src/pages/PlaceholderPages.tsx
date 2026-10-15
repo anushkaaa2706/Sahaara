@@ -1,3 +1,4 @@
+import { CareCircleCard } from '../components/CareCircleCard';
 import { Link } from 'react-router-dom';
 import {
   Heart,
@@ -61,10 +62,8 @@ export function AppointmentsPage() {
 
 export function CareCirclePage() {
   return (
-    <PlaceholderLayout
-      title="My Care Circle"
-      description="Manage your trusted contacts and their permissions here. This screen is coming soon."
-      icon={Users}
-    />
+    <div className="page-content">
+      <CareCircleCard />
+    </div>
   );
 }

@@ -1,9 +1,11 @@
+
 import { useState } from 'react';
 import {
   SmilePlus,
   PhoneCall,
   Frown,
   CheckCircle2,
+  Heart,
 } from 'lucide-react';
 
 type CheckInStatus = 'okay' | 'call' | 'unwell' | null;
@@ -13,68 +15,82 @@ const OPTIONS = [
     value: 'okay' as const,
     label: "I'm okay",
     icon: SmilePlus,
-    confirmation: "Great! We've noted that you're feeling well today.",
+    confirmation:
+      "Thank you for checking in! Your response is recorded for this demo.",
   },
   {
     value: 'call' as const,
     label: "I'd like a call",
     icon: PhoneCall,
     confirmation:
-      'Your care contact will be asked to call you soon. (Demo — no real call placed.)',
+      'Your request is shown in this demo only. No call has been placed.',
   },
   {
     value: 'unwell' as const,
     label: 'I feel unwell',
     icon: Frown,
     confirmation:
-      "We've let your care contact know. They will check in on you shortly. (Demo only.)",
+      'Your response is shown in this demo only. No care contact has been notified.',
   },
 ];
 
-/**
- * Daily check-in card with three large, easy-to-tap choices.
- * Shows a confirmation message after selection.
- */
 export function DailyCheckInCard() {
   const [selected, setSelected] = useState<CheckInStatus>(null);
 
-  const selectedOption = OPTIONS.find((o) => o.value === selected);
+  const selectedOption = OPTIONS.find(
+    (option) => option.value === selected
+  );
 
   return (
-    <div className="card">
+    <div className="card daily-checkin-card">
       <div className="card-header">
         <div className="card-header-icon teal">
-          <SmilePlus />
+          <Heart />
         </div>
-        <h2>Daily Check-In</h2>
+        <div>
+          <h2>Daily Check-In</h2>
+          <p className="checkin-subtitle">
+            A little check-in goes a long way
+          </p>
+        </div>
       </div>
 
-      <p style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--space-lg)' }}>
+      <p className="checkin-question">
         How are you feeling today?
       </p>
 
-      <div className="checkin-options" role="radiogroup" aria-label="Daily check-in">
+      <div
+        className="checkin-options"
+        role="group"
+        aria-label="Choose how you are feeling today"
+      >
         {OPTIONS.map(({ value, label, icon: Icon }) => (
           <button
             key={value}
+            type="button"
             className={`checkin-btn${selected === value ? ' selected' : ''}`}
             onClick={() => setSelected(value)}
-            role="radio"
-            aria-checked={selected === value}
+            aria-pressed={selected === value}
             id={`checkin-${value}`}
           >
-            <Icon />
-            {label}
+            <Icon size={20} />
+            <span>{label}</span>
           </button>
         ))}
       </div>
 
       {selectedOption && (
-        <div className="checkin-confirmation" role="status" aria-live="polite">
-          <CheckCircle2 />
-          {selectedOption.confirmation}
+        <div
+          className="checkin-confirmation"
+          role="status"
+          aria-live="polite"
+        >
+          <CheckCircle2 size={20} />
+          <span>{selectedOption.confirmation}</span>
         </div>
       )}
+
+      
     </div>
   );
 }

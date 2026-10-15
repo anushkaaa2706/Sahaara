@@ -1,3 +1,4 @@
+import { CareCompanionCard } from '../components/CareCompanionCard';
 import { useEffect, useState } from 'react';
 import { DEMO_USER } from '../data/demoData';
 import { QuickHelpCard } from '../components/QuickHelpCard';
@@ -58,19 +59,22 @@ export function DashboardPage() {
 
   return (
     <>
-      <div className="dashboard-greeting">
-        <h1>
-          {greeting}, {firstName}
-        </h1>
-        <p>Here's your care overview for today.</p>
-        <p role="status" aria-live="polite">
-          {apiConnected
-            ? 'Connected to Sahaara API — sample records'
-            : 'Showing sample profile — API not connected'}
-        </p>
-      </div>
+      
+<div className="dashboard-greeting">
+  <h1>
+    {greeting}, {firstName}
+  </h1>
+  <p>Here's your care overview for today.</p>
+  <p className="dashboard-greeting-note">
+    Your personal care dashboard
+  </p>
+</div>
+
 
       <div className="dashboard-grid">
+        <div className="card-full-width">
+  <CareCompanionCard />
+</div>
         <QuickHelpCard />
         <DailyCheckInCard />
 

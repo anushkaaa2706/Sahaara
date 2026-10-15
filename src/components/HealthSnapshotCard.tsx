@@ -1,112 +1,94 @@
-import { useEffect, useState } from 'react';
+
 import { Link } from 'react-router-dom';
 import {
   Activity,
   ArrowRight,
   FlaskConical,
+  HeartPulse,
+  Droplet,
 } from 'lucide-react';
 
-interface HealthReading {
-  id: string;
-  label: string;
-  value: string;
-  unit: string;
-  date: string;
-  enteredBy: string;
-}
+const SAMPLE_READINGS = [
+  {
+    id: 'bp',
+    label: 'Blood pressure',
+    value: '124/82',
+    unit: 'mmHg',
+    date: 'Today, 9:15 AM',
+    icon: HeartPulse,
+  },
+  {
+    id: 'hr',
+    label: 'Heart rate',
+    value: '76',
+    unit: 'bpm',
+    date: 'Today, 9:15 AM',
+    icon: Activity,
+  },
+  {
+    id: 'sugar',
+    label: 'Blood glucose',
+    value: '102',
+    unit: 'mg/dL',
+    date: 'Yesterday, 8:30 AM',
+    icon: Droplet,
+  },
+];
 
-interface DashboardResponse {
-  healthReadings: HealthReading[];
-}
-
-/**
- * Health snapshot card — loads sample readings from the Sahaara API.
- * These are still fictional demo records, not real patient data.
- */
 export function HealthSnapshotCard() {
-  const [readings, setReadings] = useState<HealthReading[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadReadings() {
-      try {
-        const response = await fetch(
-          'http://localhost:3002/api/dashboard',
-          { signal: controller.signal }
-        );
-
-        if (!response.ok) {
-          throw new Error('Could not load health readings');
-        }
-
-        const data: DashboardResponse = await response.json();
-        setReadings(data.healthReadings ?? []);
-        setError(false);
-      } catch (requestError) {
-        if (
-          requestError instanceof Error &&
-          requestError.name === 'AbortError'
-        ) {
-          return;
-        }
-
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadReadings();
-
-    return () => controller.abort();
-  }, []);
-
   return (
     <div className="card">
       <div className="card-header">
         <div className="card-header-icon green">
           <Activity />
         </div>
-        <h2>Recent Health Snapshot</h2>
+
+        <div>
+          <h2>Recent Health Snapshot</h2>
+          <p className="health-card-subtitle">
+            A quick look at your recorded readings
+          </p>
+        </div>
       </div>
 
       <div className="example-data-label">
-        <FlaskConical size={12} />
-        Sample records from API — not real patient data
+        <FlaskConical size={13} />
+        Illustrative sample data · Not real patient readings
       </div>
 
-      {loading && <p role="status">Loading health readings…</p>}
+      <div className="health-snapshot-list">
+        {SAMPLE_READINGS.map((reading) => {
+          const Icon = reading.icon;
 
-      {error && (
-        <p role="alert">
-          Could not load readings. Check that the Sahaara API is running.
-        </p>
-      )}
+          return (
+            <div className="health-reading" key={reading.id}>
+              <div className="health-reading-left">
+                <div className="health-reading-symbol">
+                  <Icon size={18} />
+                </div>
 
-      {!loading && !error && readings.length === 0 && (
-        <p>No health readings are available.</p>
-      )}
+                <div>
+                  <div className="health-reading-label">
+                    {reading.label}
+                  </div>
+                  <div className="health-reading-meta">
+                    {reading.date}
+                  </div>
+                </div>
+              </div>
 
-      {!loading &&
-        !error &&
-        readings.map((reading) => (
-          <div className="health-reading" key={reading.id}>
-            <div>
-              <div className="health-reading-label">{reading.label}</div>
-              <div className="health-reading-meta">
-                {reading.date} · {reading.enteredBy}
+              <div className="health-reading-right">
+                <div className="health-reading-value">
+                  {reading.value}
+                </div>
+                <div className="health-reading-meta">
+                  {reading.unit}
+                </div>
               </div>
             </div>
-
-            <div style={{ textAlign: 'right' }}>
-              <div className="health-reading-value">{reading.value}</div>
-              <div className="health-reading-meta">{reading.unit}</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
+      </div>
 
       <Link to="/health" className="view-link" id="link-health-history">
         View health history

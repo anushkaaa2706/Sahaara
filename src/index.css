@@ -1016,3 +1016,1633 @@ ul, ol {
     width: 100%;
   }
 }
+
+/* SAHAARA welcome page */
+.welcome-page {
+  min-height: 100vh;
+  background: #fbfaf8;
+  color: #243a38;
+  font-family: inherit;
+}
+
+.welcome-header {
+  min-height: 82px;
+  padding: 16px 6.5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #eae7e1;
+}
+
+.welcome-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.welcome-brand-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #dff4f0;
+  color: #168d82;
+}
+
+.welcome-brand strong,
+.welcome-brand small {
+  display: block;
+}
+
+.welcome-brand strong {
+  color: #168d82;
+  font-size: 24px;
+  letter-spacing: -0.8px;
+}
+
+.welcome-brand small {
+  margin-top: 2px;
+  color: #898b85;
+  font-size: 12px;
+}
+
+.welcome-signin,
+.welcome-primary,
+.welcome-secondary {
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.welcome-signin,
+.welcome-secondary {
+  background: white;
+  border: 1px solid #d8e5e1;
+  color: #187f76;
+}
+
+.welcome-primary {
+  background: #168d82;
+  border: 1px solid #168d82;
+  color: white;
+  box-shadow: 0 8px 20px rgba(22, 141, 130, 0.15);
+}
+
+.welcome-primary:hover,
+.welcome-signin:hover,
+.welcome-secondary:hover {
+  transform: translateY(-2px);
+}
+
+.welcome-hero {
+  max-width: 1240px;
+  min-height: 550px;
+  margin: 0 auto;
+  padding: 72px 36px 60px;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: 55px;
+}
+
+.welcome-copy {
+  max-width: 590px;
+}
+
+.welcome-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 13px;
+  border-radius: 30px;
+  background: #e8f6f2;
+  color: #18877d;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 1px;
+}
+
+.welcome-copy h1 {
+  margin: 25px 0 20px;
+  color: #263a37;
+  font-size: clamp(38px, 4.5vw, 60px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+  font-weight: 750;
+}
+
+.welcome-copy h1 span {
+  display: block;
+  color: #168d82;
+}
+
+.welcome-description {
+  max-width: 490px;
+  color: #737a75;
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+.welcome-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 29px;
+}
+
+.welcome-trust {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 29px;
+  color: #747d76;
+  font-size: 12px;
+}
+
+.welcome-trust svg {
+  color: #168d82;
+  flex-shrink: 0;
+}
+
+.welcome-visual {
+  min-height: 400px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #e5efea;
+  border-radius: 36px;
+  background:
+    radial-gradient(ellipse at 50% 45%, #e1f5ef 0%, #f0f8f4 40%, #f8f7f2 75%);
+}
+
+.welcome-orbit {
+  position: absolute;
+  border: 1px solid rgba(22, 141, 130, 0.14);
+  border-radius: 50%;
+}
+
+.orbit-one {
+  width: 270px;
+  height: 270px;
+}
+
+.orbit-two {
+  width: 365px;
+  height: 365px;
+}
+
+.welcome-heart {
+  z-index: 1;
+  width: 155px;
+  height: 155px;
+  display: grid;
+  place-items: center;
+  border-radius: 45px;
+  background: white;
+  color: #168d82;
+  box-shadow: 0 22px 65px rgba(40, 110, 96, 0.12);
+  transform: rotate(-5deg);
+}
+
+.welcome-heart svg {
+  transform: rotate(5deg);
+}
+
+.welcome-float {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #ebece5;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 32px rgba(48, 66, 57, 0.08);
+}
+
+.float-health {
+  top: 54px;
+  left: 18px;
+}
+
+.float-circle {
+  right: 14px;
+  bottom: 65px;
+}
+
+.welcome-float strong,
+.welcome-float small {
+  display: block;
+}
+
+.welcome-float strong {
+  color: #334541;
+  font-size: 12px;
+}
+
+.welcome-float small {
+  margin-top: 5px;
+  color: #818780;
+  font-size: 11px;
+}
+
+.welcome-float-icon,
+.feature-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 13px;
+}
+
+.mint,
+.feature-mint {
+  background: #e1f5ef;
+  color: #168d82;
+}
+
+.peach,
+.feature-peach {
+  background: #fff0e4;
+  color: #d68b48;
+}
+
+.feature-blue {
+  background: #e7f0ff;
+  color: #4d83c8;
+}
+
+.welcome-visual-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #66756e;
+  font-size: 11px;
+}
+
+.welcome-caption-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #168d82;
+}
+
+.welcome-features {
+  padding: 58px 24px 72px;
+  background: white;
+  border-top: 1px solid #eeece7;
+}
+
+.welcome-section-heading {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 32px;
+}
+
+.welcome-section-heading > span {
+  color: #168d82;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 1.5px;
+}
+
+.welcome-section-heading h2 {
+  margin: 12px 0;
+  color: #263a37;
+  font-size: clamp(25px, 3vw, 35px);
+  letter-spacing: -0.8px;
+}
+
+.welcome-section-heading p {
+  color: #7b807b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.welcome-feature-grid {
+  max-width: 1050px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.welcome-feature-card {
+  padding: 25px;
+  border: 1px solid #eaece6;
+  border-radius: 20px;
+  background: #fdfdfb;
+}
+
+.welcome-feature-card h3 {
+  margin: 18px 0 8px;
+  color: #30433f;
+  font-size: 17px;
+}
+
+.welcome-feature-card p {
+  margin: 0;
+  color: #777e77;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.welcome-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 25px 6.5%;
+  border-top: 1px solid #eae7e1;
+  color: #858982;
+  font-size: 12px;
+}
+
+.footer-brand {
+  color: #168d82;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+@media (max-width: 800px) {
+  .welcome-hero {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    padding: 48px 22px;
+  }
+
+  .welcome-copy {
+    max-width: 650px;
+  }
+
+  .welcome-visual {
+    min-height: 340px;
+  }
+
+  .welcome-feature-grid {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-header {
+    padding: 13px 16px;
+  }
+
+  .welcome-brand strong {
+    font-size: 21px;
+  }
+
+  .welcome-signin {
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .welcome-copy h1 {
+    font-size: 39px;
+    letter-spacing: -1.4px;
+  }
+
+  .welcome-description {
+    font-size: 15px;
+  }
+
+  .welcome-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .welcome-visual {
+    min-height: 310px;
+    border-radius: 24px;
+  }
+
+  .float-health {
+    left: 8px;
+    top: 28px;
+  }
+
+  .float-circle {
+    right: 8px;
+    bottom: 52px;
+  }
+
+  .welcome-float {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .welcome-float strong {
+    font-size: 10px;
+  }
+
+  .welcome-float small {
+    font-size: 9px;
+  }
+
+  .welcome-heart {
+    width: 115px;
+    height: 115px;
+    border-radius: 32px;
+  }
+
+  .welcome-heart svg {
+    width: 52px;
+    height: 52px;
+  }
+
+  .welcome-footer {
+    flex-wrap: wrap;
+    padding: 22px 18px;
+  }
+}
+/* Daily Check-In polish */
+.checkin-subtitle {
+  margin: 5px 0 0;
+  color: #7b8580;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.checkin-question {
+  margin: 18px 0 14px;
+  color: #35443e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.checkin-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.checkin-btn {
+  min-height: 86px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid #e1eae5;
+  border-radius: 14px;
+  background: #fbfdfb;
+  color: #465750;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease,
+    transform 160ms ease;
+}
+
+.checkin-btn:hover {
+  border-color: #65b9a7;
+  background: #f0faf6;
+  transform: translateY(-1px);
+}
+
+.checkin-btn.selected {
+  border: 2px solid #218c7c;
+  background: #eaf7f2;
+  color: #176e62;
+}
+
+.checkin-btn:focus-visible {
+  outline: 3px solid #91d8c4;
+  outline-offset: 3px;
+}
+
+.checkin-confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 16px;
+  padding: 13px;
+  border: 1px solid #cde9dc;
+  border-radius: 12px;
+  background: #f0faf5;
+  color: #286b55;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.checkin-confirmation svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.checkin-demo-note {
+  margin: 14px 0 0;
+  color: #89918c;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .checkin-options {
+    grid-template-columns: 1fr;
+  }
+
+  .checkin-btn {
+    min-height: 54px;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+/* Today's Care — progress and interactions */
+.care-subtitle {
+  margin: 5px 0 0;
+  color: #7b8580;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.care-progress-panel {
+  margin: 18px 0 8px;
+  padding: 15px;
+  border: 1px solid #e7eee9;
+  border-radius: 14px;
+  background: #f8fbf8;
+}
+
+.care-progress-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.care-progress-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #e7f5ef;
+  color: #23816e;
+}
+
+.care-progress-title {
+  color: #34463e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.care-progress-detail {
+  margin-top: 3px;
+  color: #7b8580;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.care-progress-count {
+  margin-left: auto;
+  color: #23816e;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.care-progress-track {
+  height: 7px;
+  margin-top: 13px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #e4ebe6;
+}
+
+.care-progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: #279681;
+  transition: width 220ms ease;
+}
+
+.care-progress-fill.complete {
+  width: 100%;
+}
+
+.care-item-complete {
+  background: #fbfefc;
+  border-radius: 12px;
+}
+
+.care-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.care-undo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 9px;
+  border: 1px solid #e0e8e2;
+  border-radius: 9px;
+  background: white;
+  color: #52665b;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.care-undo-btn:hover {
+  background: #f1f7f3;
+}
+
+.care-undo-btn:focus-visible {
+  outline: 3px solid #91d8c4;
+  outline-offset: 2px;
+}
+
+.care-completion-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #d2eadd;
+  border-radius: 11px;
+  background: #f0faf4;
+  color: #286b55;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.care-completion-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+/* Make daily care task buttons easy to see and click */
+.daily-task-toggle {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px;
+  flex-shrink: 0;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #23816e !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: #23816e !important;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.daily-task-toggle:hover {
+  background: #eaf7f2 !important;
+}
+
+.daily-task-toggle .daily-task-empty-circle {
+  width: 22px;
+  height: 22px;
+  display: block !important;
+  border: 2px solid #23816e !important;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.daily-task-toggle.checked {
+  background: #23816e !important;
+  color: #ffffff !important;
+  border-color: #23816e !important;
+}
+
+.daily-task-toggle:focus-visible {
+  outline: 3px solid #91d8c4;
+  outline-offset: 3px;
+}
+
+.daily-task {
+  position: relative;
+}
+/* Fix alignment of the daily care checklist */
+.daily-task {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.daily-task-content {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.daily-task-icon {
+  flex: 0 0 42px;
+}
+
+.daily-task-toggle {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  align-self: center;
+}
+
+.daily-task-title,
+.daily-task-detail {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .daily-task {
+    gap: 8px;
+  }
+
+  .daily-task-icon {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .daily-task-toggle {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+  }
+}
+/* My Care Circle page */
+.care-circle-page {
+  min-width: 0;
+}
+
+.care-circle-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 24px 0 12px;
+}
+
+.care-circle-heading-row h3,
+.care-contact-form h3 {
+  margin: 0;
+  color: #34463e;
+  font-size: 16px;
+}
+
+.care-circle-heading-row p {
+  margin: 5px 0 0;
+  color: #7b8580;
+  font-size: 12px;
+}
+
+.care-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0 22px;
+  padding: 20px;
+  border: 1px solid #dcebe4;
+  border-radius: 16px;
+  background: #f8fcf9;
+}
+
+.care-contact-form label {
+  color: #34463e;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.care-contact-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #d5e1d9;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #34463e;
+  font: inherit;
+}
+
+.care-contact-form input:focus {
+  outline: 2px solid #23816e;
+  outline-offset: 1px;
+}
+
+.care-contact-form .btn {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+.care-contact-note {
+  margin: 4px 0 0;
+  color: #7b8580;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.care-circle-feedback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  padding: 12px;
+  border-radius: 10px;
+  background: #eaf7f2;
+  color: #216b59;
+  font-size: 13px;
+}
+
+.care-circle-feedback span {
+  flex: 1;
+}
+
+.care-circle-feedback button {
+  display: flex;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.care-circle-contact-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.care-circle-contact-list .contact-card {
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid #edf0eb;
+}
+
+.care-contact-phone {
+  margin-top: 5px;
+  color: #7b8580;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.care-circle-contact-list .contact-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.care-contact-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border: 0;
+  background: transparent;
+  color: #8a514a;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.care-circle-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 16px;
+  color: #7b8580;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .care-circle-heading-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .care-circle-contact-list .contact-card {
+    flex-wrap: wrap;
+  }
+
+  .care-circle-contact-list .contact-action {
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+  }
+}
+/* Emergency and Quick Help improvements */
+.quick-help-secondary-actions {
+  margin-top: 12px;
+}
+
+.quick-help-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #edf7f2;
+  color: #245e4f;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.quick-help-feedback span {
+  flex: 1;
+}
+
+.quick-help-feedback button {
+  display: flex;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.quick-help-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 18px;
+  line-height: 1.6;
+}
+
+.quick-help-note svg {
+  flex-shrink: 0;
+}
+
+.emergency-help-modal {
+  max-width: 480px;
+  box-sizing: border-box;
+}
+
+.emergency-help-modal-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.emergency-help-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: #f2f5f2;
+  color: #34463e;
+  cursor: pointer;
+}
+
+.emergency-help-options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 22px 0;
+}
+
+.emergency-help-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #e5ebe6;
+  border-radius: 12px;
+}
+
+.emergency-help-option > svg {
+  flex-shrink: 0;
+  color: #23816e;
+}
+
+.emergency-help-option strong {
+  color: #34463e;
+  font-size: 14px;
+}
+
+.emergency-help-option p {
+  margin: 6px 0 0;
+  color: #6f7d75;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .emergency-help-modal {
+    width: calc(100% - 24px);
+    padding: 20px;
+  }
+}
+
+/* SAHAARA — My Day, My Care */
+.care-companion {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 28px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border: 1px solid #dcece7;
+  border-radius: 22px;
+  color: #263d38;
+  box-shadow: 0 8px 28px rgba(31, 91, 75, 0.07);
+  font-size: 15px;
+}
+
+.care-companion * {
+  box-sizing: border-box;
+}
+
+.care-companion-header,
+.care-companion-heading,
+.care-companion-progress-top,
+.care-companion-section-title {
+  display: flex;
+  align-items: center;
+}
+
+.care-companion-header,
+.care-companion-progress-top {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.care-companion-heading {
+  gap: 15px;
+}
+
+.care-companion-icon {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: #e0f4ee;
+  color: #168675;
+  border-radius: 17px;
+}
+
+.care-companion-eyebrow {
+  margin: 0 0 5px;
+  color: #168675;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.care-companion-heading h2 {
+  margin: 0;
+  color: #183f36;
+  font-size: clamp(23px, 3vw, 30px);
+  line-height: 1.25;
+}
+
+.care-companion-heading p:last-child {
+  margin: 6px 0 0;
+  color: #71817b;
+}
+
+.care-companion-sparkle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff5d9;
+  color: #aa7914;
+}
+
+.care-companion-progress {
+  margin: 26px 0;
+  padding: 19px;
+  border-radius: 16px;
+  background: #f1f8f5;
+}
+
+.care-companion-progress-top {
+  flex-wrap: wrap;
+  color: #526a61;
+  font-size: 14px;
+}
+
+.care-companion-progress-top strong {
+  color: #197d6a;
+}
+
+.care-companion-progress-track {
+  height: 10px;
+  margin-top: 13px;
+  overflow: hidden;
+  background: #dce9e3;
+  border-radius: 99px;
+}
+
+.care-companion-progress-fill {
+  height: 100%;
+  background: #209b80;
+  border-radius: inherit;
+  transition: width 200ms ease;
+}
+
+.care-companion-progress > p {
+  margin: 10px 0 0;
+  color: #71817b;
+  font-size: 13px;
+}
+
+.care-companion-section-title {
+  gap: 9px;
+  color: #168675;
+}
+
+.care-companion-section-title h3 {
+  margin: 0;
+  color: #263d38;
+  font-size: 18px;
+}
+
+.care-companion-timeline {
+  display: grid;
+  gap: 12px;
+  margin-top: 17px;
+}
+
+.care-companion-task {
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 17px;
+  padding: 18px;
+  border: 1px solid #e5eee9;
+  border-radius: 16px;
+  background: #fff;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+
+.care-companion-task.is-complete {
+  background: #f3faf6;
+  border-color: #cce9da;
+}
+
+.care-companion-task-time {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #71817b;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.care-companion-task-content {
+  min-width: 0;
+}
+
+.care-companion-task-content > strong {
+  display: block;
+  color: #263d38;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.care-companion-task-content > p {
+  margin: 5px 0 9px;
+  color: #71817b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.care-companion-period {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 99px;
+  background: #e7f4ee;
+  color: #237b66;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.care-companion-task-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 9px 13px;
+  border: 1px solid #cfe4db;
+  border-radius: 11px;
+  background: #fff;
+  color: #237b66;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.care-companion-task-button:hover {
+  background: #e9f7f0;
+}
+
+.care-companion-task.is-complete .care-companion-task-button {
+  background: #dff3e7;
+  border-color: #dff3e7;
+}
+
+.care-companion-mood {
+  margin-top: 27px;
+  padding: 22px;
+  border-radius: 17px;
+  background: #fbf8f0;
+  border: 1px solid #f0e8d7;
+}
+
+.care-companion-mood > p {
+  margin: 10px 0 17px;
+  color: #71817b;
+  font-size: 14px;
+}
+
+.care-companion-moods {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.care-companion-mood-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 55px;
+  padding: 12px;
+  border: 1px solid #e7e1d3;
+  border-radius: 13px;
+  background: #fff;
+  color: #53675f;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.care-companion-mood-button:hover,
+.care-companion-mood-button.is-selected {
+  border-color: #26967e;
+  background: #e5f5ee;
+  color: #176d5a;
+}
+
+.care-companion-save-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 15px;
+  border: 0;
+  border-radius: 12px;
+  background: #168675;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.care-companion-save-button:hover:not(:disabled) {
+  background: #116d60;
+}
+
+.care-companion-save-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.care-companion-feedback {
+  margin: 13px 0 0;
+  padding: 12px;
+  border-radius: 10px;
+  background: #e5f5ee;
+  color: #176d5a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.care-companion-demo-note {
+  margin: 20px 0 0;
+  color: #7d8983;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  .care-companion {
+    padding: 18px;
+  }
+
+  .care-companion-task {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .care-companion-task-button {
+    justify-self: start;
+  }
+
+  .care-companion-moods {
+    grid-template-columns: 1fr;
+  }
+
+  .care-companion-mood-button {
+    justify-content: flex-start;
+  }
+}
+
+/* SAHAARA — Wellbeing History */
+.wellbeing-history {
+  margin-top: 28px;
+  padding: 24px;
+  border: 1px solid #dcece7;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #f8fcfa, #ffffff);
+}
+
+.wellbeing-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.wellbeing-history-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: #204c40;
+  font-size: 21px;
+}
+
+.wellbeing-history-header > div > p:last-child {
+  margin: 7px 0 0;
+  color: #71817b;
+  font-size: 14px;
+}
+
+.wellbeing-history-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: #e0f4ee;
+  color: #168675;
+}
+
+.wellbeing-week {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 26px;
+  color: #344e44;
+  font-size: 14px;
+}
+
+.wellbeing-week > span {
+  color: #71817b;
+}
+
+.wellbeing-week-chart {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 12px;
+  height: 145px;
+  margin-top: 15px;
+  padding: 14px 12px 8px;
+  border-radius: 14px;
+  background: #f0f7f3;
+}
+
+.wellbeing-day {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.wellbeing-bar-area {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.wellbeing-bar {
+  width: min(28px, 75%);
+  min-height: 5px;
+  border-radius: 8px 8px 3px 3px;
+  background: #d6e6de;
+  transition: height 200ms ease;
+}
+
+.wellbeing-bar.has-entry {
+  background: linear-gradient(180deg, #43b99a, #168675);
+}
+
+.wellbeing-day-label {
+  color: #71817b;
+  font-size: 12px;
+}
+
+.wellbeing-day-mood {
+  min-height: 20px;
+  font-size: 16px;
+}
+
+.wellbeing-mood-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.wellbeing-mood-summary > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid #e5eee9;
+  border-radius: 12px;
+  background: #fff;
+  color: #5d7067;
+  font-size: 12px;
+}
+
+.wellbeing-mood-summary strong {
+  margin-left: auto;
+  color: #264c40;
+  font-size: 15px;
+}
+
+.wellbeing-mood-dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.mood-good {
+  background: #35a987;
+}
+
+.mood-okay {
+  background: #e5b34c;
+}
+
+.mood-low {
+  background: #d78b7d;
+}
+
+.wellbeing-recent {
+  margin-top: 26px;
+}
+
+.wellbeing-recent h4 {
+  margin: 0 0 13px;
+  color: #344e44;
+  font-size: 16px;
+}
+
+.wellbeing-empty {
+  margin: 0;
+  padding: 18px;
+  border-radius: 12px;
+  background: #f1f8f5;
+  color: #71817b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.wellbeing-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid #e8efeb;
+}
+
+.wellbeing-entry:last-child {
+  border-bottom: 0;
+}
+
+.wellbeing-entry-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: #e4f4ed;
+  color: #168675;
+}
+
+.wellbeing-entry-info {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wellbeing-entry-info strong {
+  color: #344e44;
+  font-size: 14px;
+}
+
+.wellbeing-entry-info span {
+  color: #71817b;
+  font-size: 12px;
+}
+
+.wellbeing-entry-status {
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: #e6f5ed;
+  color: #237b66;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.wellbeing-demo-note {
+  margin: 18px 0 0;
+  color: #7d8983;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 500px) {
+  .wellbeing-history {
+    padding: 16px;
+  }
+
+  .wellbeing-week-chart {
+    gap: 5px;
+    padding-right: 6px;
+    padding-left: 6px;
+  }
+
+  .wellbeing-mood-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+.check-in-streak {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fff3e6;
+  color: #b45309;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #fed7aa;
+}
+
+.mood-encouragement {
+  margin: 14px 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f0f8f2;
+  border: 1px solid #d7eadb;
+  color: #315b40;
+  font-size: 14px;
+  line-height: 1.6;
+}
