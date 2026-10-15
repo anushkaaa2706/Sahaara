@@ -1,24 +1,89 @@
+
 import { useState } from 'react';
 import {
   HandHelping,
   Phone,
-  Info,
+  MapPin,
   ShieldAlert,
   Users,
   X,
-  CheckCircle2,
+  MessageCircle,
+  Send,
+  Navigation,
+  LoaderCircle,
 } from 'lucide-react';
 
 export function QuickHelpCard() {
   const [showModal, setShowModal] = useState(false);
-  const [feedback, setFeedback] = useState('');
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+    accuracy: number;
+  } | null>(null);
+  const [locationStatus, setLocationStatus] = useState('');
+  const [loadingLocation, setLoadingLocation] = useState(false);
 
-  function handleDemoRequest() {
-    setShowModal(false);
-    setFeedback(
-      'Demo only: your request has not been sent to a caregiver.'
+  const emergencyMessage =
+    'I need help. Please contact me as soon as possible.';
+
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationStatus('Location is not supported by this browser.');
+      return;
+    }
+
+    setLoadingLocation(true);
+    setLocationStatus('Getting your current location...');
+    setLocation(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+        });
+        setLocationStatus('Location acquired successfully');
+        setLoadingLocation(false);
+      },
+      (error) => {
+        const message =
+          error.code === error.PERMISSION_DENIED
+            ? 'Location permission denied. Allow location access in your browser.'
+            : error.code === error.TIMEOUT
+              ? 'Location request timed out. Please try again.'
+              : 'Could not get your location. Check your device location settings.';
+
+        setLocationStatus(message);
+        setLoadingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      }
     );
-  }
+  };
+
+  const openHelp = () => {
+    setShowModal(true);
+    setLocation(null);
+    setLocationStatus('');
+    getLocation();
+  };
+
+  const closeHelp = () => {
+    setShowModal(false);
+    setLoadingLocation(false);
+  };
+
+  const mapsUrl = location
+    ? `https://www.google.com/maps?q=${location.latitude},${location.longitude}`
+    : '';
+
+  const messageWithLocation = location
+    ? `${emergencyMessage}\nMy current location: ${mapsUrl}`
+    : emergencyMessage;
 
   return (
     <>
@@ -28,67 +93,33 @@ export function QuickHelpCard() {
             <HandHelping />
           </div>
           <div>
-            <h2>Emergency & Quick Help</h2>
-            <p className="care-subtitle">
-              Support when you need it
-            </p>
+            <h2>Emergency &amp; Quick Help</h2>
+            <p className="care-subtitle">Support when you need it</p>
           </div>
         </div>
 
         <button
           type="button"
           className="btn btn-danger btn-lg btn-block"
-          onClick={() => {
-            setFeedback('');
-            setShowModal(true);
-          }}
+          onClick={openHelp}
         >
           <HandHelping size={20} />
           I need help
         </button>
 
-        <div className="quick-help-secondary-actions">
-          <button
-            type="button"
-            className="btn btn-outline btn-block"
-            onClick={() =>
-              setFeedback(
-                'Demo only: no phone call was placed. Use your phone to contact your caregiver.'
-              )
-            }
-          >
-            <Phone size={18} />
-            Contact my caregiver
-          </button>
+        <div className="quick-help-note" role="note">
+          <ShieldAlert size={20} />
+          <span>
+            <strong>We're here for you.</strong>{' '}
+            Get help from your care circle when you need support.
+          </span>
         </div>
-
-        {feedback && (
-          <div className="quick-help-feedback" role="status">
-            <Info size={18} />
-            <span>{feedback}</span>
-            <button
-              type="button"
-              onClick={() => setFeedback('')}
-              aria-label="Dismiss message"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        )}
-
-       <div className="quick-help-note" role="note">
-  <ShieldAlert size={20} />
-  <span>
-    <strong>Medical emergency?</strong> In India, call 112 for
-    emergency assistance.
-  </span>
-</div>
       </div>
 
       {showModal && (
         <div
           className="modal-overlay"
-          onClick={() => setShowModal(false)}
+          onClick={closeHelp}
         >
           <div
             className="modal emergency-help-modal"
@@ -101,59 +132,98 @@ export function QuickHelpCard() {
               <div className="card-header-icon red">
                 <HandHelping />
               </div>
+
               <button
                 type="button"
                 className="emergency-help-close"
-                onClick={() => setShowModal(false)}
-                aria-label="Close help panel"
+                onClick={closeHelp}
+                aria-label="Close emergency assistance"
               >
                 <X />
               </button>
             </div>
 
-            <h2 id="help-modal-title">How can we help?</h2>
-            <p>
-              Choose the option that best describes what you need.
-            </p>
+            <h2 id="help-modal-title">Emergency assistance</h2>
+            <p>Your care and safety matter.</p>
 
             <div className="emergency-help-options">
               <div className="emergency-help-option">
-                <ShieldAlert size={22} />
+                <Users size={22} />
                 <div>
-                  <strong>Immediate emergency</strong>
-                  <p>
-                    If someone is in immediate danger, call 112 directly
-                    from your phone.
-                  </p>
+                  <strong>Emergency contact</strong>
+                  <p>Family caregiver</p>
+                </div>
+                <Phone size={18} />
+              </div>
+
+              <div className="emergency-help-option">
+                <MapPin size={22} />
+                <div>
+                  <strong>Current GPS location</strong>
+                  <p>{locationStatus || 'Waiting for location...'}</p>
+
+                  {loadingLocation && (
+                    <LoaderCircle size={18} />
+                  )}
+
+                  {location && (
+                    <>
+                      <p>
+                        Latitude: {location.latitude.toFixed(6)}
+                      </p>
+                      <p>
+                        Longitude: {location.longitude.toFixed(6)}
+                      </p>
+                      <p>
+                        Accuracy: approximately{' '}
+                        {Math.round(location.accuracy)} metres
+                      </p>
+                      <a
+                        href={mapsUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View location on Google Maps
+                      </a>
+                    </>
+                  )}
+
+                  {!location && !loadingLocation && (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      onClick={getLocation}
+                    >
+                      <Navigation size={16} />
+                      Try again
+                    </button>
+                  )}
                 </div>
               </div>
 
               <div className="emergency-help-option">
-                <Users size={22} />
+                <MessageCircle size={22} />
                 <div>
-                  <strong>Caregiver assistance</strong>
-                  <p>
-                    You can use the demo option below to preview a help
-                    request. It will not contact anyone.
-                  </p>
+                  <strong>Emergency message</strong>
+                  <p>{messageWithLocation}</p>
                 </div>
               </div>
             </div>
 
             <div className="modal-actions">
-              <button
-                type="button"
+              <a
+                href={`sms:?body=${encodeURIComponent(messageWithLocation)}`}
                 className="btn btn-primary btn-lg btn-block"
-                onClick={handleDemoRequest}
+                style={{ textDecoration: 'none' }}
               >
-                <CheckCircle2 size={18} />
-                Preview help request
-              </button>
+                <Send size={18} />
+                Open emergency message
+              </a>
 
               <button
                 type="button"
                 className="btn btn-ghost btn-block"
-                onClick={() => setShowModal(false)}
+                onClick={closeHelp}
               >
                 Close
               </button>

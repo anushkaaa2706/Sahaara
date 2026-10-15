@@ -15,6 +15,10 @@ import {
   CheckCircle2,
   LoaderCircle,
   BookOpen,
+  Footprints,
+Mountain,
+Clock3,
+TrendingUp,
 } from 'lucide-react';
 import { createWorker } from 'tesseract.js';
 
@@ -50,12 +54,138 @@ function PlaceholderLayout({
 }
 
 export function HealthPage() {
+  const weeklySteps = [
+    { day: 'Thu', steps: 4200 },
+    { day: 'Fri', steps: 6100 },
+    { day: 'Sat', steps: 7800 },
+    { day: 'Sun', steps: 5300 },
+    { day: 'Mon', steps: 7200 },
+    { day: 'Tue', steps: 5900 },
+    { day: 'Wed', steps: 6842 },
+  ];
+
+  const steps = 6842;
+  const goal = 8000;
+  const progress = Math.min((steps / goal) * 100, 100);
+
   return (
-    <PlaceholderLayout
-      title="Health"
-      description="Your full health history, readings, and records will appear here. This screen is coming soon."
-      icon={Heart}
-    />
+    <div className="page-content health-activity-page">
+      <div className="health-demo-banner">
+        DEMO PREVIEW · SAMPLE ACTIVITY DATA
+      </div>
+
+      <div className="health-activity-heading">
+        <div>
+          <p className="health-eyebrow">YOUR WELLNESS</p>
+          <h1>Health & Activity</h1>
+          <p>Your daily movement, at a glance.</p>
+        </div>
+        <div className="health-heading-icon">
+          <Heart size={27} />
+        </div>
+      </div>
+
+      <section className="health-activity-feature">
+        <div className="health-feature-copy">
+          <span className="health-feature-label">TODAY'S STEPS</span>
+          <h2>{steps.toLocaleString('en-IN')}</h2>
+          <p>of {goal.toLocaleString('en-IN')} steps goal</p>
+          <div className="health-progress-track">
+            <div
+              className="health-progress-fill"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <strong>{Math.round(progress)}% of daily goal</strong>
+        </div>
+
+        <div
+          className="health-step-ring"
+          style={{
+            background: `conic-gradient(#65b99b ${progress}%, #e6eee9 ${progress}% 100%)`,
+          }}
+        >
+          <div className="health-step-ring-inner">
+            <Footprints size={30} />
+            <strong>{Math.round(progress)}%</strong>
+          </div>
+        </div>
+      </section>
+
+      <div className="health-metric-grid">
+        <div className="health-metric-card">
+          <div className="health-metric-icon stairs">
+            <Mountain size={22} />
+          </div>
+          <p>Floors climbed</p>
+          <h3>8 <span>floors</span></h3>
+          <small>Keep moving safely</small>
+        </div>
+
+        <div className="health-metric-card">
+          <div className="health-metric-icon active">
+            <Clock3 size={22} />
+          </div>
+          <p>Active minutes</p>
+          <h3>32 <span>min</span></h3>
+          <small>Daily movement adds up</small>
+        </div>
+      </div>
+
+      <section className="health-weekly-card">
+        <div className="health-weekly-heading">
+          <div>
+            <h2>Weekly activity</h2>
+            <p>Your movement over the last 7 days</p>
+          </div>
+          <TrendingUp size={23} />
+        </div>
+
+        <div className="health-weekly-chart">
+          {weeklySteps.map((item) => (
+            <div className="health-chart-day" key={item.day}>
+              <span className="health-chart-value">
+                {(item.steps / 1000).toFixed(1)}k
+              </span>
+              <div className="health-chart-bar-area">
+                <div
+                  className={`health-chart-bar ${
+                    item.day === 'Wed' ? 'today' : ''
+                  }`}
+                  style={{
+                    height: `${(item.steps / 8000) * 100}%`,
+                  }}
+                />
+              </div>
+              <span className="health-chart-day-label">{item.day}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="health-weekly-footer">
+          <span>Daily goal: 8,000 steps</span>
+          <span>Latest: 6,842 steps</span>
+        </div>
+      </section>
+
+      <section className="health-wellness-note">
+        <div className="health-note-icon">
+          <Heart size={21} />
+        </div>
+        <div>
+          <h3>Every step matters</h3>
+          <p>
+            Gentle, regular movement can support everyday wellbeing.
+            Take breaks and use handrails when climbing stairs.
+          </p>
+        </div>
+      </section>
+
+      <p className="health-demo-disclaimer">
+        Illustrative sample data for demonstration only. No activity tracker
+        or health sensor is connected.
+      </p>
+    </div>
   );
 }
 
