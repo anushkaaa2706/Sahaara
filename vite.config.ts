@@ -1,3 +1,4 @@
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -6,5 +7,12 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    proxy: {
+      '/api': {
+        target: 'https://sahaara-home.vercel.app',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
 });

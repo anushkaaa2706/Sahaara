@@ -200,12 +200,23 @@ export function MedicinesPage() {
   const [cameraError, setCameraError] = useState('');
   const [cameraActive, setCameraActive] = useState(false);
 
+  const [medicineQuery, setMedicineQuery] = useState('');
+  const [medicineResults, setMedicineResults] = useState<
+    { title: string; url: string }[]
+  >([]);
+  const [isSearchingMedicine, setIsSearchingMedicine] = useState(false);
+  const [medicineSearchError, setMedicineSearchError] = useState('');
+  const [medicineDisclaimer, setMedicineDisclaimer] = useState('');
+
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const workerRef = useRef<Awaited<ReturnType<typeof createWorker>> | null>(
     null,
   );
+  
+  
 
   function selectImage(file?: File) {
     if (!file) return;
@@ -353,6 +364,72 @@ workerRef.current = null;
     setCameraError('');
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
+
+  async function searchMedicine() {
+    const medicine = medicineQuery.trim();
+
+    if (!medicine) {
+      setMedicineSearchError('Please enter a medicine name.');
+      return;
+    }
+
+    setIsSearchingMedicine(true);
+    setMedicineSearchError('');
+    setMedicineResults([]);
+    setMedicineDisclaimer('');
+
+    try {
+      const response = await fetch('/api/medicine-search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ medicine }),
+      });
+
+      const responseText = await response.text();
+
+let data: {
+  results?: { title: string; url: string }[];
+  disclaimer?: string;
+  error?: string;
+};
+
+try {
+  data = JSON.parse(responseText);
+} catch {
+  throw new Error(
+    `Medicine search returned an invalid response (HTTP ${response.status}). Check the API server.`
+  );
+}
+
+if (!response.ok) {
+  throw new Error(
+    data.error || `Medicine search failed (HTTP ${response.status}).`
+  );
+}
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || 'Unable to search for medicine information.',
+        );
+      }
+
+      setMedicineResults(
+        Array.isArray(data.results) ? data.results : [],
+      );
+      setMedicineDisclaimer(data.disclaimer || '');
+    } catch (error) {
+      setMedicineSearchError(
+        error instanceof Error
+          ? error.message
+          : 'Something went wrong. Please try again.',
+      );
+    } finally {
+      setIsSearchingMedicine(false);
+    }
+  }
+
 
   return (
     <div className="page-content medicine-vision">
@@ -576,6 +653,89 @@ workerRef.current = null;
           </section>
         </>
       )}
+
+
+      <section className="medicine-panel">
+        <div className="medicine-section-heading">
+          <span className="medicine-step">4</span>
+          <div>
+            <h2>Medicine Information Search</h2>
+            <p>
+              Find information sources about a medicine for you or your
+              caregiver to review.
+            </p>
+          </div>
+        </div>
+
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void searchMedicine();
+          }}
+        >
+          <label htmlFor="medicine-search">
+            Medicine name
+          </label>
+
+          <input
+            id="medicine-search"
+            type="text"
+            value={medicineQuery}
+            onChange={(event) => setMedicineQuery(event.target.value)}
+            placeholder="e.g. paracetamol"
+            maxLength={100}
+            required
+          />
+
+          <button
+            type="submit"
+            className="medicine-primary-button"
+            disabled={isSearchingMedicine}
+          >
+            {isSearchingMedicine
+              ? 'Searching...'
+              : 'Search Information'}
+          </button>
+        </form>
+
+        {medicineSearchError && (
+          <p className="medicine-inline-warning" role="alert">
+            {medicineSearchError}
+          </p>
+        )}
+
+        {medicineResults.length > 0 && (
+          <div>
+            <h3>Information sources</h3>
+            <ul>
+              {medicineResults.map((result, index) => (
+                <li key={`${result.url}-${index}`}>
+                  <a
+                    href={result.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {result.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {medicineDisclaimer && (
+          <p className="medicine-helper">
+            {medicineDisclaimer}
+          </p>
+        )}
+
+        {!isSearchingMedicine &&
+          !medicineSearchError &&
+          medicineResults.length === 0 &&
+          medicineDisclaimer !== '' && (
+            <p>No information sources were found. Try another search.</p>
+          )}
+      </section>
 
       <div className="medicine-footer-note">
         If you are unsure what a medicine is or how to take it, ask a
