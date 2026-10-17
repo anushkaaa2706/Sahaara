@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { CareCircleCard } from '../components/CareCircleCard';
-import { Link } from 'react-router-dom';
 import {
   Heart,
   Pill,
-  Calendar,
-  ArrowLeft,
   Camera,
   Upload,
   RotateCcw,
@@ -34,35 +31,9 @@ interface HealthReading {
 
 const HEALTH_READINGS_KEY = 'sahaara-health-readings-v1';
 
-interface PlaceholderProps {
-  title: string;
-  description: string;
-  icon: React.ComponentType<{ size?: number }>;
-}
 
-function PlaceholderLayout({
-  title,
-  description,
-  icon: Icon,
-}: PlaceholderProps) {
-  return (
-    <div className="placeholder-page">
-      <div className="placeholder-icon">
-        <Icon size={40} />
-      </div>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <Link
-        to="/dashboard"
-        className="btn btn-outline"
-        id={`link-back-from-${title.toLowerCase().replace(/\s+/g, '-')}`}
-      >
-        <ArrowLeft size={18} />
-        Back to Dashboard
-      </Link>
-    </div>
-  );
-}
+
+
 
 
 export function HealthPage() {

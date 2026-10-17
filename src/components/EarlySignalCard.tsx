@@ -9,7 +9,7 @@ import {
   HeartPulse,
   Droplets,
   TrendingUp,
-  ShieldAlert,
+ 
 } from 'lucide-react';
 
 type Mood = {

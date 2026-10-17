@@ -223,14 +223,7 @@ useEffect(() => {
   setShowTaskForm(true);
 }
 
-function openEditTaskForm(task: CareTask) {
-  setEditingTaskId(task.id);
-  setTaskTitle(task.title);
-  setTaskTime('');
-  setTaskPeriod(task.period);
-  setTaskDetail(task.detail);
-  setShowTaskForm(true);
-}
+
 
 function saveTask(event: FormEvent<HTMLFormElement>) {
   event.preventDefault();

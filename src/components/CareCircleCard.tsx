@@ -15,7 +15,7 @@ import {
   Activity,
   Footprints,
   Droplets,
-  Clock,
+  
 } from 'lucide-react';
 
 type CareContact = {
