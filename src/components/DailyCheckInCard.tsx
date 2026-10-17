@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SmilePlus,
   PhoneCall,
@@ -8,34 +8,90 @@ import {
   Heart,
 } from 'lucide-react';
 
-type CheckInStatus = 'okay' | 'call' | 'unwell' | null;
+type CheckInStatus = 'okay' | 'call' | 'unwell';
+
+interface CheckInRecord {
+  status: CheckInStatus;
+  updatedAt: string;
+}
+
+type CheckInHistory = Record<string, CheckInRecord>;
+
+const STORAGE_KEY = 'sahaara.dailyCheckIns.v1';
+
+function getTodayKey() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function readHistory(): CheckInHistory {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) as CheckInHistory : {};
+  } catch {
+    return {};
+  }
+}
 
 const OPTIONS = [
   {
     value: 'okay' as const,
     label: "I'm okay",
+    confirmation: 'Your check-in has been saved on this device.',
     icon: SmilePlus,
-    confirmation:
-      "Thank you for checking in! Your response is recorded for this demo.",
   },
   {
     value: 'call' as const,
     label: "I'd like a call",
-    icon: PhoneCall,
     confirmation:
-      'Your request is shown in this demo only. No call has been placed.',
+      'Your request has been saved on this device. No call has been placed.',
+    icon: PhoneCall,
   },
   {
     value: 'unwell' as const,
     label: 'I feel unwell',
-    icon: Frown,
     confirmation:
-      'Your response is shown in this demo only. No care contact has been notified.',
+      'Your response has been saved on this device. No care contact has been notified.',
+    icon: Frown,
   },
 ];
 
 export function DailyCheckInCard() {
-  const [selected, setSelected] = useState<CheckInStatus>(null);
+  const [history, setHistory] = useState<CheckInHistory>({});
+  const [loaded, setLoaded] = useState(false);
+
+  const today = getTodayKey();
+  const selected = history[today]?.status ?? null;
+
+  useEffect(() => {
+    setHistory(readHistory());
+    setLoaded(true);
+  }, []);
+
+  function handleCheckIn(status: CheckInStatus) {
+    const currentHistory = readHistory();
+
+    const updatedHistory: CheckInHistory = {
+      ...currentHistory,
+      [getTodayKey()]: {
+        status,
+        updatedAt: new Date().toISOString(),
+      },
+    };
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHistory));
+      setHistory(updatedHistory);
+    } catch {
+      window.alert(
+        'Your check-in could not be saved. Please check your browser storage.'
+      );
+    }
+  }
 
   const selectedOption = OPTIONS.find(
     (option) => option.value === selected
@@ -69,8 +125,9 @@ export function DailyCheckInCard() {
             key={value}
             type="button"
             className={`checkin-btn${selected === value ? ' selected' : ''}`}
-            onClick={() => setSelected(value)}
+            onClick={() => handleCheckIn(value)}
             aria-pressed={selected === value}
+            disabled={!loaded}
             id={`checkin-${value}`}
           >
             <Icon size={20} />
@@ -90,7 +147,15 @@ export function DailyCheckInCard() {
         </div>
       )}
 
-      
+      {selected && history[today] && (
+        <p className="checkin-subtitle">
+          Last updated today at{' '}
+          {new Date(history[today].updatedAt).toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit',
+          })}
+        </p>
+      )}
     </div>
   );
 }

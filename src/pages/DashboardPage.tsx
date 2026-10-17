@@ -6,6 +6,8 @@ import { DailyCheckInCard } from '../components/DailyCheckInCard';
 import { TodaysCareCard } from '../components/TodaysCareCard';
 import { HealthSnapshotCard } from '../components/HealthSnapshotCard';
 import { CareCircleCard } from '../components/CareCircleCard';
+import { CarePulseCard } from '../components/CarePulseCard';
+import { EarlySignalCard } from '../components/EarlySignalCard';
 
 interface DashboardResponse {
   patient: {
@@ -67,9 +69,15 @@ export function DashboardPage() {
 
       <div className="dashboard-grid">
         <div className="card-full-width">
-          <CareCompanionCard />
-        </div>
+  <CareCompanionCard />
+</div>
 
+<div className="card-full-width">
+  <CarePulseCard />
+</div>
+<div className="card-full-width">
+  <EarlySignalCard />
+</div>
         <QuickHelpCard />
         <DailyCheckInCard />
 

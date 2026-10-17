@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Pill,
   Calendar,
@@ -17,6 +17,45 @@ import {
 
 export function TodaysCareCard() {
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
+  const STORAGE_KEY = 'sahaara-todays-care-v1';
+const [tasksLoaded, setTasksLoaded] = useState(false);
+
+useEffect(() => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (saved) {
+      const parsed: unknown = JSON.parse(saved);
+
+      if (
+        Array.isArray(parsed) &&
+        parsed.every((id) => typeof id === 'string') &&
+        parsed.every((id) =>
+          ['medicine', 'water', 'meal'].includes(id)
+        )
+      ) {
+        setCompletedTasks(parsed);
+      }
+    }
+  } catch {
+    // Keep the default checklist if saved data cannot be read.
+  }
+
+  setTasksLoaded(true);
+}, []);
+
+useEffect(() => {
+  if (!tasksLoaded) return;
+
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(completedTasks)
+    );
+  } catch {
+    // The checklist remains usable if storage is unavailable.
+  }
+}, [completedTasks, tasksLoaded]);
 
   const tasks = [
     {

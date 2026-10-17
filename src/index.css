@@ -3360,3 +3360,80 @@ ul, ol {
     font-size: 9px;
   }
 }
+.care-companion-task-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.care-companion-task-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.care-access-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.care-access-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: #25836f;
+}
+
+.shared-health-panel {
+  margin-top: 20px;
+}
+
+.health-share-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.health-share-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #e1e9e7;
+  border-radius: 12px;
+}
+
+.health-share-row > svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.health-share-row strong {
+  display: block;
+}
+
+.health-share-row p {
+  margin: 5px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.health-share-row small {
+  color: #64748b;
+}
+
+.care-circle-page select {
+  width: 100%;
+  margin: 8px 0 16px;
+  padding: 10px;
+  border: 1px solid #d5dfdd;
+  border-radius: 8px;
+  background: white;
+}

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CareCircleCard } from '../components/CareCircleCard';
 import { Link } from 'react-router-dom';
 import {
@@ -16,12 +16,23 @@ import {
   LoaderCircle,
   BookOpen,
   Footprints,
-Mountain,
-Clock3,
-TrendingUp,
+  Mountain,
+  Clock3,
+  TrendingUp,
+  HeartPulse,
+  Droplet,
+  Activity,
+  CalendarDays,
 } from 'lucide-react';
 import { createWorker } from 'tesseract.js';
+interface HealthReading {
+  id: string;
+  type: 'bp' | 'hr' | 'sugar';
+  value: string;
+  date: string;
+}
 
+const HEALTH_READINGS_KEY = 'sahaara-health-readings-v1';
 
 interface PlaceholderProps {
   title: string;
@@ -53,49 +64,236 @@ function PlaceholderLayout({
   );
 }
 
-export function HealthPage() {
-  const weeklySteps = [
-    { day: 'Thu', steps: 4200 },
-    { day: 'Fri', steps: 6100 },
-    { day: 'Sat', steps: 7800 },
-    { day: 'Sun', steps: 5300 },
-    { day: 'Mon', steps: 7200 },
-    { day: 'Tue', steps: 5900 },
-    { day: 'Wed', steps: 6842 },
-  ];
 
-  const steps = 6842;
+export function HealthPage() {
+  const [readings, setReadings] = useState<HealthReading[]>([]);
+  
+  const todayKey = (() => {
+    const date = new Date();
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  })();
+
+  const [dailySteps, setDailySteps] = useState<Record<string, number>>(() => {
+    try {
+      return JSON.parse(
+        localStorage.getItem('sahaara-daily-steps-v1') || '{}'
+      );
+    } catch {
+      return {};
+    }
+  });
+
+  const [stepInput, setStepInput] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem(
+      'sahaara-daily-steps-v1',
+      JSON.stringify(dailySteps)
+    );
+  }, [dailySteps]);
+
+  const steps = dailySteps[todayKey] ?? 0;
   const goal = 8000;
   const progress = Math.min((steps / goal) * 100, 100);
 
+  const weeklySteps = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() - (6 - index));
+
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    const dateKey = `${y}-${m}-${d}`;
+
+    return {
+      day: date.toLocaleDateString('en-US', { weekday: 'short' }),
+      dateKey,
+      steps: dailySteps[dateKey] ?? 0,
+    };
+  });
+
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(HEALTH_READINGS_KEY);
+
+      if (saved) {
+        const parsed: unknown = JSON.parse(saved);
+
+        if (Array.isArray(parsed)) {
+          const validReadings = parsed.filter(
+            (item): item is HealthReading =>
+              item !== null &&
+              typeof item === 'object' &&
+              typeof item.id === 'string' &&
+              ['bp', 'hr', 'sugar'].includes(item.type) &&
+              typeof item.value === 'string' &&
+              typeof item.date === 'string' &&
+              !Number.isNaN(new Date(item.date).getTime()
+              )
+          );
+
+          setReadings(validReadings);
+        }
+      }
+    } catch {
+      console.error('Unable to load saved health readings.');
+    }
+  }, []);
+
+  // Show readings from today and the previous two calendar days.
+  const cutoff = new Date();
+  cutoff.setHours(0, 0, 0, 0);
+  cutoff.setDate(cutoff.getDate() - 2);
+
+  const recentReadings = readings
+    .filter((reading) => new Date(reading.date) >= cutoff)
+    .sort(
+      (a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+  const readingTypes = [
+    {
+      type: 'bp',
+      label: 'Blood pressure',
+      icon: HeartPulse,
+      unit: 'mmHg',
+    },
+    {
+      type: 'hr',
+      label: 'Heart rate',
+      icon: Activity,
+      unit: 'bpm',
+    },
+    {
+      type: 'sugar',
+      label: 'Blood glucose',
+      icon: Droplet,
+      unit: '',
+    },
+  ] as const;
+
+  
+
   return (
     <div className="page-content health-activity-page">
-      <div className="health-demo-banner">
-        DEMO PREVIEW · SAMPLE ACTIVITY DATA
-      </div>
+      
 
       <div className="health-activity-heading">
         <div>
           <p className="health-eyebrow">YOUR WELLNESS</p>
-          <h1>Health & Activity</h1>
-          <p>Your daily movement, at a glance.</p>
+          <h1>Health &amp; Activity</h1>
+          <p>Your daily movement and health readings, at a glance.</p>
         </div>
         <div className="health-heading-icon">
           <Heart size={27} />
         </div>
       </div>
 
+      {/* Saved health readings */}
+      <section className="health-weekly-card">
+        <div className="health-weekly-heading">
+          <div>
+            <h2>Recent health readings</h2>
+            <p>Your saved readings from the last 3 calendar days</p>
+          </div>
+          <HeartPulse size={23} />
+        </div>
+
+        {readingTypes.map((readingType) => {
+          const Icon = readingType.icon;
+          const typeReadings = recentReadings.filter(
+            (reading) => reading.type === readingType.type
+          );
+
+          return (
+            <div
+              key={readingType.type}
+              className="health-reading-group"
+              style={{ marginTop: '20px' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '10px',
+                }}
+              >
+                <Icon size={21} />
+                <h3 style={{ margin: 0 }}>{readingType.label}</h3>
+              </div>
+
+              {typeReadings.length > 0 ? (
+                <div style={{ display: 'grid', gap: '10px' }}>
+                  {typeReadings.map((reading) => (
+                    <div
+                      key={reading.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '12px',
+                        flexWrap: 'wrap',
+                        padding: '12px',
+                        borderRadius: '10px',
+                        background: 'var(--surface-secondary, #f5f7f6)',
+                      }}
+                    >
+                      <strong>
+                        {reading.value}
+                        {readingType.unit
+                          ? ` ${readingType.unit}`
+                          : ''}
+                      </strong>
+
+                      <span style={{ fontSize: '0.875rem' }}>
+                        {new Date(reading.date).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>
+                  No saved {readingType.label.toLowerCase()} readings
+                  in this period.
+                </p>
+              )}
+            </div>
+          );
+        })}
+
+        <p
+          style={{
+            fontSize: '0.85rem',
+            marginTop: '20px',
+            opacity: 0.8,
+          }}
+        >
+          These readings are user-entered records, not live measurements.
+          Consult a healthcare professional when interpreting your results.
+        </p>
+      </section>
+
+      {/* Existing activity section */}
       <section className="health-activity-feature">
         <div className="health-feature-copy">
           <span className="health-feature-label">TODAY'S STEPS</span>
           <h2>{steps.toLocaleString('en-IN')}</h2>
           <p>of {goal.toLocaleString('en-IN')} steps goal</p>
+
           <div className="health-progress-track">
             <div
               className="health-progress-fill"
               style={{ width: `${progress}%` }}
             />
           </div>
+
           <strong>{Math.round(progress)}% of daily goal</strong>
         </div>
 
@@ -111,6 +309,39 @@ export function HealthPage() {
           </div>
         </div>
       </section>
+      
+<form
+  onSubmit={(event) => {
+    event.preventDefault();
+    const value = Number(stepInput);
+
+    if (stepInput.trim() === '' || !Number.isFinite(value) ||
+        value < 0 || !Number.isInteger(value)) {
+      return;
+    }
+
+    setDailySteps((previous) => ({
+      ...previous,
+      [todayKey]: value,
+    }));
+    setStepInput('');
+  }}
+  style={{ display: 'flex', gap: '10px', margin: '16px 0', flexWrap: 'wrap' }}
+>
+  <label htmlFor="daily-step-input">Enter today's step count</label>
+  <input
+    id="daily-step-input"
+    type="number"
+    min="0"
+    step="1"
+    value={stepInput}
+    onChange={(event) => setStepInput(event.target.value)}
+    placeholder="e.g. 4500"
+    required
+  />
+  <button type="submit">Save steps</button>
+</form>
+
 
       <div className="health-metric-grid">
         <div className="health-metric-card">
@@ -150,7 +381,7 @@ export function HealthPage() {
               <div className="health-chart-bar-area">
                 <div
                   className={`health-chart-bar ${
-                    item.day === 'Wed' ? 'today' : ''
+                    item.dateKey === todayKey ? 'today' : ''
                   }`}
                   style={{
                     height: `${(item.steps / 8000) * 100}%`,
@@ -164,7 +395,7 @@ export function HealthPage() {
 
         <div className="health-weekly-footer">
           <span>Daily goal: 8,000 steps</span>
-          <span>Latest: 6,842 steps</span>
+          <span>Today: {steps.toLocaleString('en-IN')} steps</span>
         </div>
       </section>
 
@@ -181,13 +412,11 @@ export function HealthPage() {
         </div>
       </section>
 
-      <p className="health-demo-disclaimer">
-        Illustrative sample data for demonstration only. No activity tracker
-        or health sensor is connected.
-      </p>
+      
     </div>
   );
 }
+
 
 export function MedicinesPage() {
   const [imageUrl, setImageUrl] = useState('');
@@ -746,15 +975,331 @@ if (!response.ok) {
   );
 }
 
+
 export function AppointmentsPage() {
+  type Appointment = {
+  id: string;
+  doctor: string;
+  date: string;
+  time: string;
+  location: string;
+  notes: string;
+  completed?: boolean;
+};
+  const STORAGE_KEY = 'sahaara-appointments-v1';
+
+  const [appointments, setAppointments] = useState<Appointment[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [doctor, setDoctor] = useState('');
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [location, setLocation] = useState('');
+  const [notes, setNotes] = useState('');
+  const [feedback, setFeedback] = useState('');
+
+  function persistAppointments(updated: Appointment[]) {
+    setAppointments(updated);
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    } catch {
+      setFeedback('Could not save. Browser storage may be unavailable.');
+    }
+  }
+
+  function resetForm() {
+    setDoctor('');
+    setDate('');
+    setTime('');
+    setLocation('');
+    setNotes('');
+    setEditingId(null);
+    setShowForm(false);
+  }
+
+  function editAppointment(appointment: Appointment) {
+    setEditingId(appointment.id);
+    setDoctor(appointment.doctor);
+    setDate(appointment.date);
+    setTime(appointment.time);
+    setLocation(appointment.location);
+    setNotes(appointment.notes);
+    setFeedback('');
+    setShowForm(true);
+  }
+
+  function saveAppointment(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!doctor.trim() || !date || !time) {
+      setFeedback('Please enter the doctor, date and time.');
+      return;
+    }
+
+    const existingAppointment = appointments.find(
+  (item) => item.id === editingId
+);
+
+const appointment: Appointment = {
+  id: editingId ?? `${Date.now()}`,
+  doctor: doctor.trim(),
+  date,
+  time,
+  location: location.trim(),
+  notes: notes.trim(),
+  completed: existingAppointment?.completed ?? false,
+};
+
+    const updated = editingId
+      ? appointments.map((item) =>
+          item.id === editingId ? appointment : item
+        )
+      : [...appointments, appointment];
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      setAppointments(updated);
+      resetForm();
+      setFeedback(editingId ? 'Appointment updated.' : 'Appointment saved.');
+    } catch {
+      setFeedback('Could not save the appointment. Please try again.');
+    }
+  }
+
+  function deleteAppointment(id: string) {
+    if (!window.confirm('Delete this appointment?')) return;
+
+    persistAppointments(
+      appointments.filter((appointment) => appointment.id !== id)
+    );
+    setFeedback('Appointment deleted.');
+  }
+
+  const sortedAppointments = [...appointments].sort((a, b) =>
+    `${a.date}T${a.time}`.localeCompare(`${b.date}T${b.time}`)
+  );
+
+  const upcoming = sortedAppointments.filter(
+  (appointment) => !appointment.completed
+);
+
+const past = sortedAppointments.filter(
+  (appointment) => appointment.completed
+);
+
+function toggleAppointmentCompleted(id: string) {
+  const updated = appointments.map((appointment) =>
+    appointment.id === id
+      ? { ...appointment, completed: !appointment.completed }
+      : appointment
+  );
+
+  persistAppointments(updated);
+  setFeedback('Appointment status updated.');
+}
+
+  function appointmentList(items: Appointment[]) {
+    if (items.length === 0) {
+      return <p>No appointments here yet.</p>;
+    }
+
+    return (
+      <div style={{ display: 'grid', gap: 12 }}>
+        {items.map((appointment) => (
+          <article
+            key={appointment.id}
+            style={{
+              padding: 16,
+              border: '1px solid #dce8e1',
+              borderRadius: 12,
+              background: '#fff',
+            }}
+          >
+            <h4 style={{ margin: '0 0 8px' }}>
+              {appointment.doctor}
+            </h4>
+            <p>
+              <strong>Date:</strong> {appointment.date}
+            </p>
+            <p>
+              <strong>Time:</strong> {appointment.time}
+            </p>
+
+            {appointment.location && (
+              <p>
+                <strong>Location:</strong> {appointment.location}
+              </p>
+            )}
+
+            {appointment.notes && (
+              <p>
+                <strong>Notes:</strong> {appointment.notes}
+              </p>
+            )}
+
+           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+  {!appointment.completed && (
+    <button
+      type="button"
+      onClick={() => toggleAppointmentCompleted(appointment.id)}
+    >
+      ✓ Mark as completed
+    </button>
+  )}
+
+  {appointment.completed && (
+    <button
+      type="button"
+      onClick={() => toggleAppointmentCompleted(appointment.id)}
+    >
+      ↩ Move back to upcoming
+    </button>
+  )}
+
+  <button
+    type="button"
+    onClick={() => editAppointment(appointment)}
+  >
+    Edit
+  </button>
+
+  <button
+    type="button"
+    onClick={() => deleteAppointment(appointment.id)}
+  >
+    Delete
+  </button>
+</div>
+          </article>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <PlaceholderLayout
-      title="Appointments"
-      description="Your upcoming appointments and past visit notes will appear here. This screen is coming soon."
-      icon={Calendar}
-    />
+    <section className="card">
+      <div className="card-header">
+        <div className="card-header-icon blue">
+          <CalendarDays />
+        </div>
+        <div>
+          <h2>My Appointments</h2>
+          <p>Keep track of your visits and upcoming care.</p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={() => {
+          if (showForm) {
+            resetForm();
+          } else {
+            setFeedback('');
+            setShowForm(true);
+          }
+        }}
+      >
+        {showForm ? 'Cancel' : '+ Add Appointment'}
+      </button>
+
+      {feedback && (
+        <p role="status" style={{ marginTop: 12 }}>
+          {feedback}
+        </p>
+      )}
+
+      {showForm && (
+        <form
+          onSubmit={saveAppointment}
+          style={{
+            display: 'grid',
+            gap: 12,
+            padding: 16,
+            margin: '16px 0',
+            border: '1px solid #dce8e1',
+            borderRadius: 12,
+          }}
+        >
+          <h3>{editingId ? 'Edit appointment' : 'Add appointment'}</h3>
+
+          <label>
+            Doctor's name *
+            <input
+              value={doctor}
+              onChange={(e) => setDoctor(e.target.value)}
+              placeholder="e.g. Dr. Ananya Sharma"
+              required
+            />
+          </label>
+
+          <label>
+            Date *
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </label>
+
+          <label>
+            Time *
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              required
+            />
+          </label>
+
+          <label>
+            Hospital or clinic
+            <input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Enter hospital or clinic"
+            />
+          </label>
+
+          <label>
+            Reason or notes
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Reason for visit, questions to ask, etc."
+              rows={3}
+            />
+          </label>
+
+          <button type="submit" className="btn btn-primary">
+            Save Appointment
+          </button>
+        </form>
+      )}
+
+      <div style={{ marginTop: 24 }}>
+        <h3>Upcoming appointments ({upcoming.length})</h3>
+        {appointmentList(upcoming)}
+      </div>
+
+      <div style={{ marginTop: 28 }}>
+        <h3>Past visits ({past.length})</h3>
+        {appointmentList(past)}
+      </div>
+    </section>
   );
 }
+
 
 export function CareCirclePage() {
   return (

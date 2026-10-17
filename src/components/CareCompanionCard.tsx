@@ -1,4 +1,6 @@
+
 import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
 import {
   CheckCircle2,
   Circle,
@@ -11,7 +13,10 @@ import {
   Sun,
   TrendingUp,
   CalendarDays,
+  Plus,
+  Pencil,
 } from 'lucide-react';
+
 
 type MoodLabel = 'Good' | 'Okay' | 'Not great';
 
@@ -74,38 +79,19 @@ const moods: {
   { label: 'Not great', icon: Frown },
 ];
 
-const STORAGE_KEY = 'sahaara-wellbeing-history';
+const STORAGE_KEY = 'sahaara-wellbeing-history-v2';
+const TASK_STORAGE_KEY = 'sahaara-care-tasks-v1';
 
-const SAMPLE_MOOD_HISTORY: MoodEntry[] = (() => {
-  const samples: { daysAgo: number; mood: MoodLabel }[] = [
-    { daysAgo: 6, mood: 'Good' },
-    { daysAgo: 5, mood: 'Okay' },
-    { daysAgo: 4, mood: 'Good' },
-    { daysAgo: 3, mood: 'Not great' },
-    { daysAgo: 2, mood: 'Okay' },
-    { daysAgo: 1, mood: 'Good' },
-  ];
 
-  return samples.map((sample) => {
-    const date = new Date();
-    date.setDate(date.getDate() - sample.daysAgo);
-
-    return {
-      id: `sample-${getDayKey(date)}`,
-      mood: sample.mood,
-      date: getDayKey(date),
-    };
-  });
-})();
 
 
 function getDayKey(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+  ].join('-');
 }
-
 function formatEntryDate(dateString: string) {
   const date = new Date(`${dateString}T12:00:00`);
   const today = getDayKey(new Date());
@@ -123,46 +109,48 @@ function formatEntryDate(dateString: string) {
 
 export function CareCompanionCard() {
   const [tasks, setTasks] = useState<CareTask[]>(initialTasks);
-  const [mood, setMood] = useState<MoodLabel | ''>('');
-  const [history, setHistory] = useState<MoodEntry[]>(SAMPLE_MOOD_HISTORY);
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+const [showTaskForm, setShowTaskForm] = useState(false);
+const [taskTitle, setTaskTitle] = useState('');
+const [taskTime, setTaskTime] = useState('');
+const [taskPeriod, setTaskPeriod] = useState('Morning');
+const [taskDetail, setTaskDetail] = useState('');
+const [tasksLoaded, setTasksLoaded] = useState(false);
+const [mood, setMood] = useState<MoodLabel | ''>('');
+const [history, setHistory] = useState<MoodEntry[]>([]);
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const [savedMessage, setSavedMessage] = useState('');
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+  
+useEffect(() => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
 
-      if (stored) {
-        const parsed: unknown = JSON.parse(stored);
+    if (stored) {
+      const parsed: unknown = JSON.parse(stored);
 
-        if (Array.isArray(parsed)) {
-          const validEntries = parsed.filter(
-            (entry): entry is MoodEntry =>
-              entry !== null &&
-              typeof entry === 'object' &&
-              typeof entry.id === 'string' &&
-              typeof entry.date === 'string' &&
-              ['Good', 'Okay', 'Not great'].includes(entry.mood)
-          );
+      if (Array.isArray(parsed)) {
+        const validEntries = parsed.filter(
+          (entry): entry is MoodEntry =>
+            entry !== null &&
+            typeof entry === 'object' &&
+            typeof entry.id === 'string' &&
+            typeof entry.date === 'string' &&
+            ['Good', 'Okay', 'Not great'].includes(entry.mood)
+        );
 
-       setHistory(() => {
-  const combined = [...SAMPLE_MOOD_HISTORY, ...validEntries];
-
-  return combined.filter(
-    (entry, index, entries) =>
-      entries.findIndex(
-        (item) => item.id === entry.id
-      ) === index
-  );
-});
-        }
+        setHistory(validEntries);
       }
-    } catch {
-      // If saved demo data cannot be read, start with an empty history.
+    } else {
+      setHistory([]);
     }
+  } catch {
+    setHistory([]);
+  }
 
-    setHistoryLoaded(true);
-  }, []);
+  setHistoryLoaded(true);
+}, []);
+
 
   useEffect(() => {
     if (!historyLoaded) return;
@@ -173,6 +161,48 @@ export function CareCompanionCard() {
       // The app remains usable if browser storage is unavailable.
     }
   }, [history, historyLoaded]);
+  
+  
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(TASK_STORAGE_KEY);
+
+      if (stored) {
+        const savedTasks: unknown = JSON.parse(stored);
+
+        if (Array.isArray(savedTasks)) {
+          const validTasks = savedTasks.filter(
+            (task): task is CareTask =>
+              task !== null &&
+              typeof task === 'object' &&
+              typeof task.id === 'number' &&
+              typeof task.title === 'string' &&
+              typeof task.time === 'string' &&
+              typeof task.period === 'string' &&
+              typeof task.detail === 'string' &&
+              typeof task.done === 'boolean'
+          );
+
+          setTasks(validTasks);
+        }
+      }
+    } catch {
+      // Keep the default tasks if stored data cannot be read.
+    }
+
+    setTasksLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!tasksLoaded) return;
+
+    try {
+      localStorage.setItem(TASK_STORAGE_KEY, JSON.stringify(tasks));
+    } catch {
+      // The app remains usable if browser storage is unavailable.
+    }
+  }, [tasks, tasksLoaded]);
+
 
   const completed = tasks.filter((task) => task.done).length;
   const progress = Math.round((completed / tasks.length) * 100);
@@ -184,6 +214,64 @@ export function CareCompanionCard() {
       )
     );
   }
+  function openNewTaskForm() {
+  setEditingTaskId(null);
+  setTaskTitle('');
+  setTaskTime('');
+  setTaskPeriod('Morning');
+  setTaskDetail('');
+  setShowTaskForm(true);
+}
+
+function openEditTaskForm(task: CareTask) {
+  setEditingTaskId(task.id);
+  setTaskTitle(task.title);
+  setTaskTime('');
+  setTaskPeriod(task.period);
+  setTaskDetail(task.detail);
+  setShowTaskForm(true);
+}
+
+function saveTask(event: FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+
+  const title = taskTitle.trim();
+  if (!title) return;
+
+  if (editingTaskId !== null) {
+    setTasks((current) =>
+      current.map((task) =>
+        task.id === editingTaskId
+          ? {
+              ...task,
+              title,
+              time: taskTime.trim() || 'Any time',
+              period: taskPeriod,
+              detail: taskDetail.trim(),
+            }
+          : task
+      )
+    );
+  } else {
+    const newTask: CareTask = {
+      id: Date.now(),
+      title,
+      time: taskTime.trim() || 'Any time',
+      period: taskPeriod,
+      detail: taskDetail.trim(),
+      done: false,
+    };
+
+    setTasks((current) => [...current, newTask]);
+  }
+
+  setShowTaskForm(false);
+  setEditingTaskId(null);
+}
+
+function deleteTask(id: number) {
+  setTasks((current) => current.filter((task) => task.id !== id));
+}
 
   function saveMood() {
     if (!mood) return;
@@ -289,10 +377,21 @@ export function CareCompanionCard() {
         </p>
       </div>
 
-      <div className="care-companion-section-title">
-        <Sun size={19} />
-        <h3>Your care plan</h3>
-      </div>
+      
+
+<div className="care-companion-section-title">
+  <Sun size={19} />
+  <h3>Your care plan</h3>
+  <button
+    type="button"
+    onClick={openNewTaskForm}
+  >
+    <Plus size={16} /> Add activity
+  </button>
+</div>
+
+
+
 
       <div className="care-companion-timeline">
         {tasks.map((task) => (
@@ -310,6 +409,31 @@ export function CareCompanionCard() {
               <p>{task.detail}</p>
               <span className="care-companion-period">{task.period}</span>
             </div>
+            
+<div className="care-companion-task-actions">
+  <button
+    type="button"
+    onClick={() => {
+  setEditingTaskId(task.id);
+  setTaskTitle(task.title);
+  setTaskTime('');
+  setTaskPeriod(task.period);
+  setTaskDetail(task.detail);
+  setShowTaskForm(true);
+}}
+    aria-label={`Edit ${task.title}`}
+  >
+    <Pencil size={16} /> Edit
+  </button>
+  <button
+    type="button"
+    onClick={() => deleteTask(task.id)}
+    aria-label={`Delete ${task.title}`}
+  >
+    Delete
+  </button>
+</div>
+
 
             <button
               type="button"
@@ -327,12 +451,82 @@ export function CareCompanionCard() {
           </div>
         ))}
       </div>
+        {showTaskForm && (
+  <form
+    onSubmit={saveTask}
+    style={{
+      display: 'grid',
+      gap: '12px',
+      padding: '16px',
+      margin: '16px 0',
+      border: '1px solid #dce8e1',
+      borderRadius: '12px',
+    }}
+  >
+    <h3>{editingTaskId !== null ? 'Edit activity' : 'Add activity'}</h3>
+
+    <label>
+      Activity name *
+      <input
+        value={taskTitle}
+        onChange={(event) => setTaskTitle(event.target.value)}
+        placeholder="e.g. Take a morning walk"
+        maxLength={100}
+        required
+      />
+    </label>
+
+    <label>
+      Time (optional)
+      <input
+        type="time"
+        value={taskTime}
+        onChange={(event) => setTaskTime(event.target.value)}
+      />
+    </label>
+
+    <label>
+      Part of day
+      <select
+        value={taskPeriod}
+        onChange={(event) => setTaskPeriod(event.target.value)}
+      >
+        <option>Morning</option>
+        <option>Afternoon</option>
+        <option>Evening</option>
+        <option>Anytime</option>
+      </select>
+    </label>
+
+    <label>
+      Details (optional)
+      <input
+        value={taskDetail}
+        onChange={(event) => setTaskDetail(event.target.value)}
+        placeholder="Add a helpful note"
+        maxLength={200}
+      />
+    </label>
+
+    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+      <button type="submit">Save activity</button>
+      <button
+        type="button"
+        onClick={() => setShowTaskForm(false)}
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+)}
 
       <div className="care-companion-mood">
         <div className="care-companion-section-title">
           <Heart size={19} />
           <h3>How are you feeling today?</h3>
         </div>
+        
+
         <p>Your feelings matter. Choose the option that feels right.</p>
 
         {mood && (
@@ -403,7 +597,10 @@ export function CareCompanionCard() {
 
         <div className="wellbeing-week">
           <strong>Last 7 days</strong>
-          <span>{history.length} saved check-in{history.length === 1 ? '' : 's'}</span>
+<span>
+  {lastSevenDays.reduce((total, day) => total + day.count, 0)} saved check-in
+  {lastSevenDays.reduce((total, day) => total + day.count, 0) === 1 ? '' : 's'}
+</span>
         </div>
 
         <div className="wellbeing-week-chart">

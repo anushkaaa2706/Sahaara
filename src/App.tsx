@@ -60,6 +60,7 @@ export function App() {
         }
       />
 
+      <Route path="/auth" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
